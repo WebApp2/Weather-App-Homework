@@ -11,7 +11,8 @@ $INFILES['feb'] ='022015data.csv';
 $INFILES['march'] ='032015data.csv';     
 $INFILES['april'] ='042015data.csv';     
 $INFILES['may'] ='052015data.csv';
-$month = $_REQUEST['monthData'];
+$month = 'feb';
+//$month = $_REQUEST['monthData'];
 
 $f = $INFILES[$month];
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
