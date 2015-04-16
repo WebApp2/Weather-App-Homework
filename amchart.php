@@ -1,10 +1,19 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<?php 
+
+require_once('chartData.php');
+//Gets the data from app_home.php makes a function call to chartData.php
+$month = $_REQUEST['monthData'];
+$f = $INFILES[$month];
+ 
+csv_to_json($HOME, $f); 
+?>
 <html>
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>amCharts examples</title>
+       
        <link rel="stylesheet" href="http://www.amcharts.com/lib/style.css" type="text/css">
 <script src="http://www.amcharts.com/lib/3/amcharts.js" type="text/javascript"></script>
 <script src="http://www.amcharts.com/lib/3/serial.js" type="text/javascript"></script>
@@ -29,7 +38,7 @@ return eval(request.responseText);
         <script type="text/javascript">
 
             
-            //var chartData = [];
+          
             var chartCursor;
             var chart;
 
@@ -43,19 +52,22 @@ return eval(request.responseText);
                 chart.dataProvider = chartData;
                 chart.categoryField = "Date";
                 chart.dataDateFormat = "MMDDYYYY";
-
-                
+              
+                //Legend
+                var legend = new AmCharts.AmLegend();
+                chart.addLegend(legend);
 
                 // AXES
                 // category
                 var categoryAxis = chart.categoryAxis;
-                categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
+                categoryAxis.parseDates = false; // as our data is date-based, we set parseDates to true
                 categoryAxis.minPeriod = "DD"; // our data is daily, so we set minPeriod to DD
                 categoryAxis.dashLength = 1;
                 categoryAxis.gridAlpha = 0.15;
                 categoryAxis.minorGridEnabled = true;
                 categoryAxis.axisColor = "#DADADA";
-
+                categoryAxis.equalSpacing = true;
+                categoryAxis.labelFrequency= 2;
                 // value
                 var valueAxis = new AmCharts.ValueAxis();
                 valueAxis.axisAlpha = 0.2;
@@ -64,14 +76,44 @@ return eval(request.responseText);
 
                 // GRAPH
                 var graph = new AmCharts.AmGraph();
-                graph.title = "red line";
+                graph.title = "Average";
                 graph.valueField = "Average";
+                graph.bullet = "round";
+                graph.bulletBorderColor = "#FF6600";
+                graph.bulletBorderThickness = 2;
+                graph.bulletBorderAlpha = 1;
+                graph.lineThickness = 2;
+                graph.lineColor = "#FF6600";
+                graph.negativeLineColor = "#0352b5";
+                graph.balloonText = "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b>";
+                graph.hideBulletsCount = 50; // this makes the chart to hide bullets when there are more than 50 series in selection
+                chart.addGraph(graph);
+
+                 // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.title = "High";
+                graph.valueField = "High";
                 graph.bullet = "round";
                 graph.bulletBorderColor = "#FFFFFF";
                 graph.bulletBorderThickness = 2;
                 graph.bulletBorderAlpha = 1;
                 graph.lineThickness = 2;
                 graph.lineColor = "#b5030d";
+                graph.negativeLineColor = "#0352b5";
+                graph.balloonText = "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b>";
+                graph.hideBulletsCount = 50; // this makes the chart to hide bullets when there are more than 50 series in selection
+                chart.addGraph(graph);
+
+                 // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.title = "Low";
+                graph.valueField = "Low";
+                graph.bullet = "round";
+                graph.bulletBorderColor = "#0066FF";
+                graph.bulletBorderThickness = 2;
+                graph.bulletBorderAlpha = 1;
+                graph.lineThickness = 2;
+                graph.lineColor = "#0066FF";
                 graph.negativeLineColor = "#0352b5";
                 graph.balloonText = "[[category]]<br><b><span style='font-size:14px;'>value: [[value]]</span></b>";
                 graph.hideBulletsCount = 50; // this makes the chart to hide bullets when there are more than 50 series in selection
@@ -84,13 +126,13 @@ return eval(request.responseText);
 
                 // SCROLLBAR
                 var chartScrollbar = new AmCharts.ChartScrollbar();
-                chartScrollbar.graph = graph;
-                chartScrollbar.scrollbarHeight = 40;
-                chartScrollbar.color = "#FFFFFF";
-                chartScrollbar.autoGridCount = true;
+                //chartScrollbar.graph = graph;
+               // chartScrollbar.scrollbarHeight = 40;
+                //chartScrollbar.color = "#FFFFFF";
+                //chartScrollbar.autoGridCount = true;
                 chart.addChartScrollbar(chartScrollbar);
 
-                chart.categoryAxis.parseDates = false;
+                
                 chart.write("chartdiv");
 
 
@@ -116,7 +158,8 @@ return eval(request.responseText);
     </head>
 
     <body>
-        <div id="chartdiv" style="width: 640px; height: 400px;"></div>
+        <div id="chartdiv" style="width: 800px; height: 500px;"></div>
+
     </body>
 
 </html>
