@@ -2,6 +2,7 @@
 
 
 
+
 <?php  
 
  
@@ -22,19 +23,24 @@ $cumm = null;
 $cumm_count = null;
 $averageTemp = null;
 
+$max = 0;
+$min = 5834975;
 
                 function csv_to_json($home, $file){
-                  global $cumm, $cumm_count, $averageTemp;
+                  global $cumm, $cumm_count, $averageTemp, $min, $max;
                     $FN ="$home/$file";              
                     $DATA = @file( $FN );              
                         if ( !empty( $DATA) )             
                      foreach ( $DATA as $ct => $L ) {                  
                             $ALL_DATA[] = $L;
 
+                        
+
                             foreach($ALL_DATA as $index =>$val){
-                                
                                
                           list($date, $hr, $temp, $b, $a) = split(",", $val);
+
+                          
                           
                                 if(isset($_GET[$date])){
                                   $cumm[$date] += $temp;
@@ -48,6 +54,20 @@ $averageTemp = null;
                                    $cumm[$date] += $temp;
                                   $cumm_count[$date] += 1;
                                 }
+
+                                if ($temp > $max)
+                                  { $max = $temp; }
+
+                                $maxTemp[$date] = $max; 
+                                echo "date =" . $date ."max=" . $maxTemp[$date];
+
+                  
+
+                                if ($temp < $min)
+                                  { $min = $temp; }
+
+                                $minTemp[$date] = $min; 
+                                echo "date =" . $date . "min=" . $minTemp[$date];
                               
                           
                           
