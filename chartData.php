@@ -10,10 +10,10 @@ $INFILES['march'] ='032015data.csv';
 $INFILES['april'] ='042015data.csv';     
 $INFILES['may'] ='052015data.csv';
 //$month = $_REQUEST['monthData'];
-$month = 'feb';
-$f = $INFILES[$month];
+//$month = 'feb';
+//$f = $INFILES[$month];
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-csv_to_json($HOME, $f);     
+//csv_to_json($HOME, $f);     
 $ALL_DATA = array();
 
 $cumm = null;
@@ -34,7 +34,7 @@ $max = 0;
                                 
                                
                           list($date, $hr, $temp, $b, $a) = split(",", $val);
-                          
+                                  //Store all temps in an array, key is date
                                   $temps[$date][$hr] = $temp;
                                   $cumm[$date] += $temp;
                                   $cumm_count[$date] += 1;
@@ -50,31 +50,40 @@ $max = 0;
                             
                             }               
                       }
-                     
+                     //Get min and max for each date
                       foreach($temps as $date=>$hr){
-                        print"The high for ".$date.": " .intval(max($hr))."</br>";
-                        print "The low for ".$date.": ".intval(min($hr))."</br>";
-                       
+                        $highLow[$date]['high'] = intval(max($hr));
+                        $highLow[$date]['low'] = intval(min($hr));
                       }
                      
                      
                      $file = fopen("jsonData.php" , "w+");
-                     
+                     //Combine the average, high, and low
                       foreach($cumm as $date=>$total){
                           $average = intval($total/$cumm_count[$date]);
-                          
-                         $averageTemp[$date] += $average;
+                         $alltemp[$date]['high']=$highLow[$date]['high']; 
+                         $alltemp[$date]['average']=$average;
+                         $alltemp[$date]['low']=$highLow[$date]['low'];
+                         
                         
                       }
+                     //Bracket needed for amchart to read data
                       fwrite($file, "[");
-                    foreach($averageTemp as $key => $value){
-                       $keys = array('Date', 'Average');
-                       $line = array($key, $value);
-                      $jsonData =  array_combine($keys, $line);
-
-                        fwrite($file, json_encode($jsonData).",");
-                    }
+                      //Write Date and temps to file in json format
+                      foreach($alltemp as $date=>$val){
+                       
+                          $high =  $val['high'];
+                          $average = $val['average'];
+                          $low = $val['low'];
+                          $keys = array('Date', 'High', 'Average', 'Low' );
+                          $line = array($date, $high, $average, $low);
+                          $jsonData = array_combine($keys, $line);
+                          fwrite($file, json_encode($jsonData).",");
+                  
+                      }                      
+                    //Bracket needed for amchart to read data
                     fwrite($file, "]");
+                    
                    fclose($file);  
                    
                 }
