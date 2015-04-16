@@ -59,7 +59,7 @@ $min = 5834975;
                                   { $max = $temp; }
 
                                 $maxTemp[$date] = $max; 
-                                echo "date =" . $date ."max=" . $maxTemp[$date];
+                                echo "date =" . $date ."max=" . $max;
 
                   
 
@@ -67,7 +67,7 @@ $min = 5834975;
                                   { $min = $temp; }
 
                                 $minTemp[$date] = $min; 
-                                echo "date =" . $date . "min=" . $minTemp[$date];
+                                echo "date =" . $date . "min=" . $min;
                               
                           
                           
